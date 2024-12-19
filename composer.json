@@ -1,0 +1,7 @@
+{
+    "require": {
+        "amocrm/amocrm-api-library": "^1.10"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

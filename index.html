@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Заявка в amoCRM</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Изменено на column для размещения надписи над формой */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px; /* Отступ между надписью и формой */
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Форма заявки</h1> <!-- Надпись "Форма" -->
+    
+    <form id="requestForm" action="/src/submit.php" method="POST">
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Телефон:</label>
+        <input type="text" id="phone" name="phone" required>
+
+        <label for="price">Цена:</label>
+        <input type="text" id="price" name="price" required>
+
+        <input type="hidden" id="time_spent" name="time_spent" value="0">
+
+        <input type="submit" value="Отправить">
+    </form>
+
+    <script>
+        // Отслеживание времени нахождения на странице
+        let startTime = new Date().getTime();
+        window.onload = function() {
+            document.getElementById('requestForm').onsubmit = function() {
+                let currentTime = new Date().getTime();
+                let timeSpent = Math.floor((currentTime - startTime) / 1000);
+                if (timeSpent > 30) {
+                    this.time_spent.value = 1;
+                } else {
+                    this.time_spent.value = 0;
+                }
+            };
+        };
+    </script>
+</body>
+</html>
