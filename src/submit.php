@@ -50,46 +50,43 @@ try {
 
         if (isset($contactResponse['_embedded']['contacts'][0]['id'])) {
             $contactId = $contactResponse['_embedded']['contacts'][0]['id'];
-            echo "Контакт успешно создан! ID: $contactId<br>";
-        } else {
-            echo "Ошибка при создании контакта: " . json_encode($contactResponse);
-            exit;
-        }
 
-        // Формирование данных для сделки
-        $leadData = [
-            'name' => 'Сделка от ' . $name,
-            'price' => $price,
-            'custom_fields_values' => [
-                [
-                    'field_id' => 627205, // Укажите ID вашего поля "Более 30 секунд"
-                    'values' => [
-                        [
-                            'value' => (bool)$timeSpent, // Устанавливаем значение чекбокса
+            // Формирование данных для сделки
+            $leadData = [
+                'name' => 'Сделка от ' . $name,
+                'price' => $price,
+                'custom_fields_values' => [
+                    [
+                        'field_id' => 627205, // Укажите ID вашего поля "Более 30 секунд"
+                        'values' => [
+                            [
+                                'value' => (bool)$timeSpent, // Устанавливаем значение чекбокса
+                            ],
                         ],
                     ],
                 ],
-            ],
-            '_embedded' => [
-                'contacts' => [
-                    ['id' => $contactId], // Связываем сделку с контактом
+                '_embedded' => [
+                    'contacts' => [
+                        ['id' => $contactId], // Связываем сделку с контактом
+                    ],
                 ],
-            ],
-        ];
+            ];
 
-        // Отправка запроса на создание сделки
-        $leadResponse = sendRequest(
-            "https://{$subdomain}.amocrm.ru/api/v4/leads",
-            $accessToken['access_token'],
-            'POST',
-            json_encode([$leadData])
-        );
+            // Отправка запроса на создание сделки
+            $leadResponse = sendRequest(
+                "https://{$subdomain}.amocrm.ru/api/v4/leads",
+                $accessToken['access_token'],
+                'POST',
+                json_encode([$leadData])
+            );
 
-        if (isset($leadResponse['_embedded']['leads'][0]['id'])) {
-            $leadId = $leadResponse['_embedded']['leads'][0]['id'];
-            echo "Сделка успешно создана! ID: $leadId";
+            if (isset($leadResponse['_embedded']['leads'][0]['id'])) {
+                echo "Контакт успешно создан. ID Контакта: $contactId<br>Сделка успешно создана.ID Сделки: " . $leadResponse['_embedded']['leads'][0]['id'];
+            } else {
+                echo "Ошибка при создании сделки: " . json_encode($leadResponse);
+            }
         } else {
-            echo "Ошибка при создании сделки: " . json_encode($leadResponse);
+            echo "Ошибка при создании контакта: " . json_encode($contactResponse);
         }
     }
 } catch (Exception $e) {
