@@ -52,12 +52,12 @@
             background-color: #0056b3;
         }
         #notification {
-            display: none; /* Скрываем уведомление по умолчанию */
+            display: none;
             margin-top: 20px; 
             padding: 10px; 
             border-radius: 5px; 
             color: white; 
-            background-color: #28a745; /* Зеленый цвет для успешных уведомлений */
+            background-color: #28a745;
         }
     </style>
 </head>
@@ -82,7 +82,7 @@
         <input type="submit" value="Отправить">
     </form>
 
-    <div id="notification"></div> <!-- Блок для уведомлений -->
+    <div id="notification"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -91,18 +91,18 @@
         
         $(document).ready(function() {
             $('#requestForm').on('submit', function(event) {
-                event.preventDefault(); // Предотвращаем стандартное поведение формы
+                event.preventDefault();
 
                 // Установка времени нахождения на странице
                 let currentTime = new Date().getTime();
                 let timeSpent = Math.floor((currentTime - startTime) / 1000);
                 this.time_spent.value = timeSpent > 30 ? 1 : 0;
 
-                // Отправка данных формы через AJAX
+            
                 $.ajax({
-                    url: '/src/submit.php', // Укажите путь к вашему PHP-скрипту
+                    url: '/src/submit.php',
                     type: 'POST',
-                    data: $(this).serialize(), // Сериализуем данные формы
+                    data: $(this).serialize(),
                     success: function(response) {
                         $('#notification').html('<p>' + response + '</p>').fadeIn().delay(5000).fadeOut(); // Показываем уведомление на 5 секунд
                     },

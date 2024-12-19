@@ -1,15 +1,15 @@
 <?php
-// Конфигурация для AmoCRM
+
 $clientId = 'd199b903-ad67-4562-9c0a-aa1d776cb9cc'; 
 $clientSecret = 'YmbtzMJv4wDhDDYZz6Af47FB1tByx5CPjzGIRlS50qGMIwos7228JVqoJf3WLGHZ'; 
 $redirectUri = 'Yd199b903-ad67-4562-9c0a-aa1d776cb9cc'; 
-$subdomain = 'pysskix12'; // Поддомен вашего аккаунта в amoCRM
+$subdomain = 'pysskix12'; // Поддомен аккаунта в amoCRM
 
-// Получение токена доступа
+
 $accessToken = getAccessToken();
 
 try {
-    // Обработка данных формы
+    
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $name = $_POST['name'];
         $email = $_POST['email'];
@@ -17,12 +17,12 @@ try {
         $price = (float)$_POST['price'];
         $timeSpent = (int)$_POST['time_spent']; // 1 или 0
 
-        // Формирование данных для контакта
+        
         $contactData = [
             'name' => $name,
             'custom_fields_values' => [
                 [
-                    'field_id' => 627017, // Укажите ID вашего поля Email
+                    'field_id' => 627017, // ID вашего поля Email
                     'values' => [
                         [
                             'value' => $email,
@@ -30,7 +30,7 @@ try {
                     ],
                 ],
                 [
-                    'field_id' => 627015, // Укажите ID вашего поля Телефон
+                    'field_id' => 627015, // ID вашего поля Телефон
                     'values' => [
                         [
                             'value' => $phone,
@@ -40,7 +40,7 @@ try {
             ],
         ];
 
-        // Отправка запроса на создание контакта
+        
         $contactResponse = sendRequest(
             "https://{$subdomain}.amocrm.ru/api/v4/contacts",
             $accessToken['access_token'],
@@ -51,16 +51,16 @@ try {
         if (isset($contactResponse['_embedded']['contacts'][0]['id'])) {
             $contactId = $contactResponse['_embedded']['contacts'][0]['id'];
 
-            // Формирование данных для сделки
+            
             $leadData = [
                 'name' => 'Сделка от ' . $name,
                 'price' => $price,
                 'custom_fields_values' => [
                     [
-                        'field_id' => 627205, // Укажите ID вашего поля "Более 30 секунд"
+                        'field_id' => 627205, // ID поля "Более 30 секунд"
                         'values' => [
                             [
-                                'value' => (bool)$timeSpent, // Устанавливаем значение чекбокса
+                                'value' => (bool)$timeSpent,
                             ],
                         ],
                     ],
