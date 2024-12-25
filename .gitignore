@@ -1,0 +1,12 @@
+
+AppData/
+Cookies/
+Documents/
+Local Settings/
+Temporary Internet Files/
+
+*.tmp
+*.log
+
+node_modules/
+vendor/

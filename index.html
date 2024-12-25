@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Заявка в amoCRM</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        #notification {
+            display: none;
+            margin-top: 20px; 
+            padding: 10px; 
+            border-radius: 5px; 
+            color: white; 
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <h1>Форма заявки</h1>
+    
+    <form id="requestForm" action="/src/submit.php" method="POST">
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Телефон:</label>
+        <input type="text" id="phone" name="phone" required>
+
+        <label for="price">Цена:</label>
+        <input type="text" id="price" name="price" required>
+
+        <input type="hidden" id="time_spent" name="time_spent" value="0">
+
+        <input type="submit" value="Отправить">
+    </form>
+
+    <div id="notification"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Отслеживание времени нахождения на странице
+        let startTime = new Date().getTime();
+        
+        $(document).ready(function() {
+            $('#requestForm').on('submit', function(event) {
+                event.preventDefault();
+
+                // Установка времени нахождения на странице
+                let currentTime = new Date().getTime();
+                let timeSpent = Math.floor((currentTime - startTime) / 1000);
+                this.time_spent.value = timeSpent > 30 ? 1 : 0;
+
+            
+                $.ajax({
+                    url: '/src/submit.php',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $('#notification').html('<p>' + response + '</p>').fadeIn().delay(5000).fadeOut(); // Показываем уведомление на 5 секунд
+                    },
+                    error: function(xhr, status, error) {
+                        $('#notification').html('<p>Произошла ошибка при отправке данных.</p>').fadeIn().delay(5000).fadeOut();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
